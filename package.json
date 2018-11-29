@@ -4,8 +4,8 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon server.js",
+    "test": "mocha",
+    "start": "node server.js",
     "debug": "nodemon --inspect server.js"
   },
   "author": "",
@@ -20,23 +20,23 @@
     "dotenv": "^6.1.0",
     "ejs": "^2.6.1",
     "express": "^4.16.4",
-    "express-promise-router": "^3.0.3",
     "express-rate-limit": "^3.3.2",
     "express-session": "^1.15.6",
     "express-status-monitor": "^1.2.3",
     "helmet": "^3.15.0",
-    "mocha": "^5.2.0",
     "mongoose": "^5.3.4",
     "morgan": "^1.9.1",
     "nodemailer": "^4.7.0",
-    "nodemailer-sendgrid": "^1.0.3",
     "nodemailer-sendgrid-transport": "^0.2.0",
     "passport": "^0.4.0",
     "passport-facebook": "^2.1.1",
     "passport-google-oauth20": "^1.0.0",
-    "passport-local": "^1.0.0"
+    "passport-local": "^1.0.0",
+    "randomstring": "^1.1.5"
   },
   "devDependencies": {
-    "nodemon": "^1.18.4"
+    "mocha": "^5.2.0",
+    "nodemon": "^1.18.4",
+    "supertest": "^3.3.0"
   }
 }

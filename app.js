@@ -7,8 +7,8 @@ const MongoStore       = require('connect-mongo')(session);
 const morgan           = require('morgan');
 const db               = require('./database');
 const helmet           = require('helmet')
-const { SESSION_KEYS } = require('./config/keys.js')
 const rateLimit        = require('express-rate-limit');
+const { SESSION_KEYS } = require('./config/keys.js')
 
 // APP GLOBALS
 const oneDay = 86400000;
@@ -20,8 +20,8 @@ app.set('view engine', 'ejs');
 // MIDDLE WEAR ----------------------------------------------------------------
 app.use(helmet());
 app.use(rateLimit({
-  windowMs: 15 * 60 * 1000,
-  max: 100 
+  windowMs: 20 * 60 * 1000, // 20 minutes
+  max: 100 // 100 requests per 15 minutes
 }));
 app.use(morgan('dev'));
 app.use(cookieParser());
@@ -35,12 +35,7 @@ app.use(session({
   store: new MongoStore({ mongooseConnection: db }),
   cookie: {
     maxAge: oneDay,
-    // TODO: Open these options for security
     httpOnly: true
-    // secure: true,
-    // makes sure the client can't see the cookies
-    // domain: 'example.com', makes sure we are only getting cookies from a ertain domain
-    // path: 'foo/bar'  
   }
 }));
 app.use(passport.initialize());
@@ -48,8 +43,10 @@ app.use(passport.session());
 
 // ERROR HANDLING ------------------------------------------------------------
 app.use((err, req, res, next) => {
-    if (err)
+    if (err) {
       console.error(err);
+      res.status(500).send({msg: "Internal Server Error 500"})
+    }
     else
       next();
 });

@@ -13,6 +13,7 @@ module.exports = {
             .catch(err => next(err));
     },
     isVerifiedGlobal: (req, res, next) => {
+        // used to tell the use they still need to verify email on certain routes
         User.findById(req.user)
             .then(user => {
                 if (user.isVerified)

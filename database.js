@@ -1,6 +1,10 @@
 const mongoose                         = require('mongoose');
 const { MONGOURI, MONGO_DATABASE  }    = require('./config/keys.js')
 
+mongoose.set('useFindAndModify', false);
+mongoose.set('useCreateIndex', true);
+mongoose.set('useNewUrlParser', true);
+
 const mongoOptions = {
   useNewUrlParser: true,
   autoIndex: false,
@@ -16,7 +20,8 @@ mongoose.Promise = global.Promise;
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', () => {
-  console.log(`Connected to DataBase: ${MONGO_DATABASE.DATABASE_NAME}\nWith user: ${MONGO_DATABASE.USER}`);
+  console.log(`Connected to DataBase: ${MONGO_DATABASE.NAME}\nWith user: ${MONGO_DATABASE.USER}`);
 });
 
+// export the connection
 module.exports = db;

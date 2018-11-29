@@ -5,12 +5,13 @@ const passport                = require('../config/passport');
 const GOOGLE_SCOPES           = require('../config/keys').AUTH.GOOGLE.SCOPES;
 const FACEBOOK_SCOPES         = require('../config/keys').AUTH.FACEBOOK.SCOPES;
 const { loggedInRedirect }    = require('../util/middleware/Authentication');
-const { isVerifiedLogIn }              = require('../util/middleware/Email-Verification');
+const { isVerifiedLogIn }     = require('../util/middleware/Email-Verification');
 const {
   signup,
   login,
   logout,
-  forgot
+  forgot,
+  reset
   }                     = require('../controllers/authController');
 
 // LOCAL AUTH -----------------------------------------------------------------
@@ -58,11 +59,13 @@ router.route('/auth/facebook/callback')
 // PASSWORD RESET -------------------------------------------------------------
 router.route('/forgot')
   .get(forgot.get)
+  // set reset token
+  // send reset token
   .post(forgot.post)
 
 router.route('/reset/:token')
-  .get()
-  .post()
+  .get(reset.get)
+  .post(reset.post)
 
 // LOGOUT ---------------------------------------------------------------------
 router.route('/logout')
