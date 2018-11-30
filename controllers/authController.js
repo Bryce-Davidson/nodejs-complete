@@ -1,8 +1,11 @@
 const User                    = require('../models/User');
-var nodemailer              = require('nodemailer');
-var sgTransport             = require('nodemailer-sendgrid-transport');
-const randomString          = require('randomstring');
-var { SENDGRID_API_KEY }    = require('../config/keys');
+const nodemailer              = require('nodemailer');
+const sgTransport             = require('nodemailer-sendgrid-transport');
+const randomString            = require('randomstring');
+const { SENDGRID_API_KEY }    = require('../config/keys');
+const ejs                     = require('ejs');
+const fs                      = require('fs');
+const path                    = require("path");
 
 // SIGNUP ---------------------------------------------------------------------
 const signup = {
@@ -39,6 +42,8 @@ const forgot = {
     if (!email)
       res.send("Please include an email")
     
+
+
       const setRandomToken = email => 
         User
           .findOne({ 'local.email': email })
@@ -55,7 +60,9 @@ const forgot = {
             return user;
         });
 
-      const sendResetEmail = user => {
+      const sendResetEmail = async user => {
+        var htmlstring = await fs.readFileSync(path.resolve(__dirname, "../emails/verify-email.ejs"), 'utf-8');
+        var htmltosend = await ejs.render(htmlstring, {token: user.passwordResetToken});
         var sendGridOptions = {auth: {api_key: SENDGRID_API_KEY}}
         var mailer = nodemailer.createTransport(sgTransport(sendGridOptions));
         var resetEmail = {
@@ -64,7 +71,7 @@ const forgot = {
         subject: 'Nodejs Password Reset',
         text: `Please click on the link to reset your password! \\n\\n 
             http://localhost:4000/reset/${user.passwordResetToken}`,
-        html: '' // GET HTML LOADED
+        html: htmltosend
         }
         return mailer.sendMail(resetEmail)
       } 

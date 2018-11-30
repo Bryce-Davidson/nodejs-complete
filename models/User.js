@@ -38,7 +38,9 @@ var userSchema = mongoose.Schema({
 
 userSchema.pre('save', function(next) {
   const user = this;
-  if(user.method !== 'local') {
+  if(!this.isModified('method'))
+    return next();
+  else if (this.isModified('method') && user.method !== 'local') {
     user.isVerified = true;
   } 
   next()
